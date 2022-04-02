@@ -12,6 +12,7 @@ cat.|instr.|output
 ```scaffold packet(buy-order)```|```starport scaffold packet buy-order amountDenom amount:int priceDenom price:int --ack remainingAmount:int,purchase:int --module dex```
 ```scaffold message(cancel-sell-order)```|```starport scaffold message cancel-sell-order port channel amountDenom priceDenom orderID:int --desc "Cancel a sell order" --module dex```
 ```scaffold message(cancel-buy-order)```|```starport scaffold message cancel-buy-order port channel amountDenom priceDenom orderID:int --desc "Cancel a buy order" --module dex```
+```scaffold.map(denom-trace)```|```starport scaffold map denom-trace port channel origin --no-message --module dex```
 
 ## Changes(proto)
 k|genesis|query|tx|packet|
