@@ -43086,6 +43086,10 @@ definitions:
         type: string
       priceDenom:
         type: string
+  frank4g.interchange.dex.MsgCancelBuyOrderResponse:
+    type: object
+  frank4g.interchange.dex.MsgCancelSellOrderResponse:
+    type: object
   frank4g.interchange.dex.MsgSendBuyOrderResponse:
     type: object
   frank4g.interchange.dex.MsgSendCreatePairResponse:

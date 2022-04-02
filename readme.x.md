@@ -10,19 +10,22 @@ cat.|instr.|output
 ```scaffold packet(create-pair)```|```starport scaffold packet create-pair sourceDenom targetDenom --module dex```
 ```scaffold packet(sell-order)```|```starport scaffold packet sell-order amountDenom amount:int priceDenom price:int --ack remainingAmount:int,gain:int --module dex```
 ```scaffold packet(buy-order)```|```starport scaffold packet buy-order amountDenom amount:int priceDenom price:int --ack remainingAmount:int,purchase:int --module dex```
+```scaffold message(cancel-sell-order)```|```starport scaffold message cancel-sell-order port channel amountDenom priceDenom orderID:int --desc "Cancel a sell order" --module dex```
+```scaffold message(cancel-buy-order)```|```starport scaffold message cancel-buy-order port channel amountDenom priceDenom orderID:int --desc "Cancel a buy order" --module dex```
 
 ## Changes(proto)
 k|genesis|query|tx|packet|
--|-
+-|-|-|-|-
 ```starport scaffold list```|
 ```starport scaffold map```|```repeated```|msg,rpc:```Response,Request```(Get,All)
-```starport scaffold packet```|-|-|rpc,Msg:```x```,```xReponse```|```PacketData```,```PacketAck```
+```starport scaffold packet```|||rpc,Msg:```x```,```xReponse```|```PacketData```,```PacketAck```
+```starport scaffold message```|||rpc,Msg:```x```,```xReponse```
 
 ## Added
-k|keeper|event|
--|-
-```starport scaffold packet```|x.go,msg_server_x.go|```eventTypeXPacket```|
-
+k|keeper|event|types|codec
+-|-|-|-|-
+```starport scaffold packet```|```x.go```,```msg_server_x.go```|```eventTypeXPacket```|
+```starport scaffold message```|```msg_server_x.go```||```message_x.go```|
 ## Flags
 flag|action
 -|-
@@ -30,6 +33,7 @@ flag|action
 ```--indexed```|
 ```--ibc```|
 ```--ordering unordered```|
+```--desc "..."```|
 ```--module x```|
 ```--dep bank```|
 
