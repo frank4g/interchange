@@ -43086,6 +43086,12 @@ definitions:
         type: string
       priceDenom:
         type: string
+  frank4g.interchange.dex.MsgSendBuyOrderResponse:
+    type: object
+  frank4g.interchange.dex.MsgSendCreatePairResponse:
+    type: object
+  frank4g.interchange.dex.MsgSendSellOrderResponse:
+    type: object
   frank4g.interchange.dex.Params:
     type: object
     description: Params defines the parameters for the module.
