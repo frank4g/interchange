@@ -1,4 +1,4 @@
-- https://docs.starport.com/guide/ibc.html
+- https://docs.starport.com/guide/interchange/02-init.html
 
 ## Build
 cat.|instr.|output
@@ -43,3 +43,10 @@ k|v
 -|-
 default|string
 int|int32
+
+## Test
+k|v
+-|-
+```start mars app```|```starport chain serve -c mars.yml```
+```start mars venus```|```starport chain serve -c venus.yml```
+```creating an order book for a pair of tokens```|```interchanged tx dex send-create-pair dex channel-0 marscoin venuscoin --chain-id mars```
