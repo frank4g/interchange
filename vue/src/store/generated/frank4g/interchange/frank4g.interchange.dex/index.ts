@@ -1,11 +1,13 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
+import { BuyOrderBook } from "./module/types/dex/buy_order_book"
 import { DexPacketData } from "./module/types/dex/packet"
 import { NoData } from "./module/types/dex/packet"
 import { Params } from "./module/types/dex/params"
+import { SellOrderBook } from "./module/types/dex/sell_order_book"
 
 
-export { DexPacketData, NoData, Params };
+export { BuyOrderBook, DexPacketData, NoData, Params, SellOrderBook };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -44,11 +46,17 @@ function getStructure(template) {
 const getDefaultState = () => {
 	return {
 				Params: {},
+				SellOrderBook: {},
+				SellOrderBookAll: {},
+				BuyOrderBook: {},
+				BuyOrderBookAll: {},
 				
 				_Structure: {
+						BuyOrderBook: getStructure(BuyOrderBook.fromPartial({})),
 						DexPacketData: getStructure(DexPacketData.fromPartial({})),
 						NoData: getStructure(NoData.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						SellOrderBook: getStructure(SellOrderBook.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -82,6 +90,30 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
+		},
+				getSellOrderBook: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.SellOrderBook[JSON.stringify(params)] ?? {}
+		},
+				getSellOrderBookAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.SellOrderBookAll[JSON.stringify(params)] ?? {}
+		},
+				getBuyOrderBook: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.BuyOrderBook[JSON.stringify(params)] ?? {}
+		},
+				getBuyOrderBookAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.BuyOrderBookAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -134,6 +166,102 @@ export default {
 				return getters['getParams']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryParams API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QuerySellOrderBook({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.querySellOrderBook( key.index)).data
+				
+					
+				commit('QUERY', { query: 'SellOrderBook', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QuerySellOrderBook', payload: { options: { all }, params: {...key},query }})
+				return getters['getSellOrderBook']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QuerySellOrderBook API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QuerySellOrderBookAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.querySellOrderBookAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.querySellOrderBookAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'SellOrderBookAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QuerySellOrderBookAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getSellOrderBookAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QuerySellOrderBookAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryBuyOrderBook({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryBuyOrderBook( key.index)).data
+				
+					
+				commit('QUERY', { query: 'BuyOrderBook', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBuyOrderBook', payload: { options: { all }, params: {...key},query }})
+				return getters['getBuyOrderBook']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryBuyOrderBook API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryBuyOrderBookAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryBuyOrderBookAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryBuyOrderBookAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'BuyOrderBookAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBuyOrderBookAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getBuyOrderBookAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryBuyOrderBookAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
